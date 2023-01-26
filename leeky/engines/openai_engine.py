@@ -185,7 +185,7 @@ class OpenAIEngine(BaseEngine):
         # set the parameters
         self.parameters = parameters
 
-    def get_completions(self, prompt: str, n: int = 1) -> list[dict]:
+    def get_completions(self, prompt: str, n: int = 1) -> list[str]:
         """
         This method returns n completions for the prompt.
 
@@ -211,14 +211,12 @@ class OpenAIEngine(BaseEngine):
 
                 try:
                     response = openai.Completion.create(
-                        model=self.model,
-                        prompt=prompt,
-                        **self.parameters
+                        model=self.model, prompt=prompt, **self.parameters
                     )
 
                     # set response if present
                     if len(response["choices"]) > 0:
-                        response_list.append(response)
+                        response_list.append(response["choices"][0]["text"])
                     else:
                         response = None
                 except Exception as e:
@@ -235,7 +233,12 @@ class OpenAIEngine(BaseEngine):
 
 if __name__ == "__main__":
     oai = OpenAIEngine()
-    oai.set_parameters({"temperature": 1.0, "max_tokens": 32,})
+    oai.set_parameters(
+        {
+            "temperature": 1.0,
+            "max_tokens": 32,
+        }
+    )
     prompt = "Joke: Why did the"
 
     for c in oai.get_completions(prompt, n=5):

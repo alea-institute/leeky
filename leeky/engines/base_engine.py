@@ -69,7 +69,7 @@ class BaseEngine(ABC):
         pass
 
     @abstractmethod
-    def get_completions(self, prompt: str) -> list[dict]:
+    def get_completions(self, prompt: str) -> list[str]:
         """
         This method performs a "traditional" text completion based on the prompt provided.
 
