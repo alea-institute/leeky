@@ -1,5 +1,5 @@
 ## leeky: Leakage/contamination testing for black box language models
-<img src="leeky.png" alt="drawing" width="100" />
+<img src="leeky.png" alt="DALL-E generated logo of a leek in a bucket that is NOT leaking." width="100" />
 
 This repository implements training data contamination testing methods that support
 black box text completion models, including OpenAI's models or HuggingFace models.
