@@ -1,4 +1,5 @@
 ## leeky: Leakage/contamination testing for black box language models
+<img src="leeky.png" alt="drawing" width="100" />
 
 This repository implements training data contamination testing methods that support
 black box text completion models, including OpenAI's models or HuggingFace models.
@@ -28,9 +29,7 @@ Text: The judicial Power shall extend to all Cases, in Law and Equity, arising
 
 100% of tokens match the original text (Article III).
 
-TODO: add output from real method run
-
-### B. Recital with context
+### B. Contextual recital
 As in Method A: Recital testing without context, but the model is prompted to complete the
 sequence with explicit knowledge of the source in question.
 
@@ -50,9 +49,23 @@ Text: The judicial Power shall extend to all Cases, in Law and Equity, arising
 
 100% of tokens match the original text (Article III).
 
-TODO: add output from real method run
+### C. Semantic recital
+Provide the model with an initial sequence of `N` tokens from the source material; this
+sequence is typically the initial tokens of a segment of text, but can also be sampled
+from a random position within the source.
 
-### C. Source veracity
+The model is then prompted to complete the sequence with or without context `M` times
+using `K` completion prompts.  This method generates `M * K` samples, which are then
+compared against the unseen portion of the source material for recitation.
+
+Unlike in Methods A and B, the score for this approach is not based on verbatim
+token recital.  Instead, the score is based on a semantic similarity using
+a non-LLM technique, such as:
+  * Jaccard stem/lemma sets or frequency vectors
+  * word2vec, doc2vec, or BERT similarity of the original and generated text
+  * number of tokens within \eps threshold in word embedding space
+
+### D. Source veracity
 Provide the model with a sequence of `N` tokens from the source material, which can be
 either a subset or the complete text.  
 
@@ -76,7 +89,7 @@ Text: The Racketeer Influenced and Corrupt Organizations (RICO) Act is a United 
 Answer: Yes
 ```
 
-### D. Source recall
+### E. Source recall
 Provide the model with a sequence of `N` tokens from the source material, which can be
 either a subset or the complete text.  
 
@@ -101,20 +114,3 @@ Source:
 
 This is a valid description of the source of the text, which can be checked via substring
 or fuzzy string matching.
-
-
-### E. Semantic similarity
-Provide the model with an initial sequence of `N` tokens from the source material; this
-sequence is typically the initial tokens of a segment of text, but can also be sampled
-from a random position within the source.
-
-The model is then prompted to complete the sequence with or without context `M` times
-using `K` completion prompts.  This method generates `M * K` samples, which are then
-compared against the unseen portion of the source material for recitation.
-
-Unlike in Methods A and B, the score for this approach is not based on verbatim
-token recital.  Instead, the score is based on a semantic similarity using
-a non-LLM technique, such as:
-  * Jaccard or cosine similarity of stem/lemma sets or frequency vectors
-  * word2vec, doc2vec, or BERT similarity of the original and generated text
-  * number of tokens within \eps threshold in word2vec embedding space
