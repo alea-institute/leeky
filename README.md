@@ -114,3 +114,12 @@ Source:
 
 This is a valid description of the source of the text, which can be checked via substring
 or fuzzy string matching.
+
+
+### F. Search Engines
+Provide a substring of the source material to a search engine like Google Search, Bing,
+or Archive.org.
+
+Unlike the other methods, this method does not return a score in [0.0, 1.0].  Instead,
+this method returns the number of results from the search engine.
+
