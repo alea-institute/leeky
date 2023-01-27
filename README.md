@@ -4,6 +4,16 @@
 This repository implements training data contamination testing methods that support
 black box text completion models, including OpenAI's models or HuggingFace models.
 
+
+## Example Results
+| Text                                            | Recital               | Contextual Recital | Semantic Recital       | Source Veracity | Source Recall | Search   |
+|--------------------------------------------------|------------------------|--------------------|------------------------|------------------|----------------|----------|
+| Preamble, US Constitution                       | 0.91                   | 1.00                | 0.53                    | 1.00              | 1.00           | 87100.00 |
+| Text in style of Preamble, novel                | 0.01                   | 0.10                | 0.10                    | 0.00              | None         | 0.00     |
+| RICO Act, Wikipedia                             | 1.00                   | 0.95                | 0.46                    | 1.00              | 1.00           | 4738.00  |
+| Fake RICO Act, novel                           | 0.07                   | 0.03                | 0.10                    | 0.00              | None         | 0.00     |
+
+
 The following methods are currently implemented:
 
 ### A. Recital without context
@@ -117,9 +127,11 @@ or fuzzy string matching.
 
 
 ### F. Search Engines
-Provide a substring of the source material to a search engine like Google Search, Bing,
-or Archive.org.
+Provide a random substring of the source material to a search engine like Google Search, Bing,
+or Archive.org.  Generate `M` samples like this.
 
 Unlike the other methods, this method does not return a score in [0.0, 1.0].  Instead,
-this method returns the number of results from the search engine.
+this method returns the average number of results from the search engine across the
+`M` samples.
+
 
