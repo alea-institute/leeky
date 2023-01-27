@@ -41,6 +41,7 @@ from leeky.engines.base_engine import BaseEngine
 # set up logging
 logger = logging.getLogger(__name__)
 
+
 def completion_prompt_001(text: str) -> str:
     """Generate a simple prompt to complete the following question WITHOUT context."""
 
@@ -71,6 +72,7 @@ Answer:"""
     prompt = prompt.strip()
 
     return prompt
+
 
 def completion_prompt_003(text: str) -> str:
     """Generate a simple prompt to complete the following question WITHOUT context."""
@@ -150,9 +152,9 @@ class SourceVeracityTester:
         self.rng = numpy.random.RandomState(seed=seed)
 
     def test(
-            self,
-            text: str,
-            num_samples: int = 5,
+        self,
+        text: str,
+        num_samples: int = 5,
     ) -> dict:
         """Test whether the model thinks the text is "real."
 
@@ -189,8 +191,11 @@ class SourceVeracityTester:
             initial_position = self.rng.randint(0, num_tokens - num_tokens_sample)
 
             # get the tokens to test
-            sample_text = text[text_token_splits[initial_position]:
-                               text_token_splits[initial_position + num_tokens_sample]]
+            sample_text = text[
+                text_token_splits[initial_position] : text_token_splits[
+                    initial_position + num_tokens_sample
+                ]
+            ]
 
             # send the text to the completion engine
             sample = {
@@ -224,7 +229,11 @@ class SourceVeracityTester:
                 results["samples"].append(sample)
 
         # aggregate non-None scores and compute the average
-        scores = [sample["score"] for sample in results["samples"] if sample["score"] is not None]
+        scores = [
+            sample["score"]
+            for sample in results["samples"]
+            if sample["score"] is not None
+        ]
         results["score"] = sum(scores) / float(len(scores)) if len(scores) > 0 else None
 
         return results
@@ -241,7 +250,7 @@ if __name__ == "__main__":
         domestic Tranquility, provide for the common defence, promote the general Welfare, and secure the Blessings of
         Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of
         America.""".strip(),
-        num_samples=25
+        num_samples=25,
     )
     print(r["score"])
 
@@ -250,6 +259,6 @@ if __name__ == "__main__":
         to establish a more effective space launch system, insure lunar vibes, and provide for the common
         supply of McRibs, do therefore totally and completely reject the idea that cows cannot be sent
         into space.""".strip(),
-        num_samples=25
+        num_samples=25,
     )
     print(r["score"])

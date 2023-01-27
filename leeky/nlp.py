@@ -64,7 +64,11 @@ def get_spacy_tokens(text: str, lowercase: bool = False) -> list[str]:
     This method returns the tokens for a given text based on spacy's tokenization.
     """
     # get the tokens
-    tokens = [token.text.lower() if lowercase else token.text for token in nlp(text) if token.text.strip() != ""]
+    tokens = [
+        token.text.lower() if lowercase else token.text
+        for token in nlp(text)
+        if token.text.strip() != ""
+    ]
 
     # return the tokens
     return tokens
@@ -75,7 +79,11 @@ def get_spacy_stems(text: str, lowercase: bool = False) -> list[str]:
     This method returns the stems for a given text based on spacy's tokenization.
     """
     # get the stems
-    stems = [token.lemma_.lower() if lowercase else token.lemma_ for token in nlp(text) if token.lemma_.strip() != ""]
+    stems = [
+        token.lemma_.lower() if lowercase else token.lemma_
+        for token in nlp(text)
+        if token.lemma_.strip() != ""
+    ]
 
     # return the stems
     return stems
@@ -235,8 +243,10 @@ def compare_tokens_spacy_points(
     for i in range(len(tokens_a)):
         for j in range(len(tokens_b)):
             # skip zero vectors
-            if (numpy.linalg.norm(token_points[tokens_a[i]]) == 0
-                or numpy.linalg.norm(token_points[tokens_b[j]]) == 0):
+            if (
+                numpy.linalg.norm(token_points[tokens_a[i]]) == 0
+                or numpy.linalg.norm(token_points[tokens_b[j]]) == 0
+            ):
                 continue
 
             # get cosine similarity with numpy

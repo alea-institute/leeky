@@ -205,7 +205,9 @@ class RecitalTester:
             )
             initial_text = text[: text_token_splits[num_initial_tokens]]
             terminal_text = text[text_token_splits[num_initial_tokens] :]
-            terminal_text_token_splits = leeky.nlp.get_ws_token_boundaries(terminal_text)
+            terminal_text_token_splits = leeky.nlp.get_ws_token_boundaries(
+                terminal_text
+            )
 
             # send the text to the completion engine
             sample = {
@@ -240,7 +242,11 @@ class RecitalTester:
                 results["samples"].append(sample)
 
         # aggregate non-None scores and compute the average
-        scores = [sample["score"] for sample in results["samples"] if sample["score"] is not None]
+        scores = [
+            sample["score"]
+            for sample in results["samples"]
+            if sample["score"] is not None
+        ]
         results["score"] = sum(scores) / float(len(scores)) if len(scores) > 0 else None
 
         return results
@@ -257,18 +263,18 @@ if __name__ == "__main__":
         domestic Tranquility, provide for the common defence, promote the general Welfare, and secure the Blessings of
         Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of
         America.""".strip(),
-        num_samples=10
+        num_samples=10,
     )
-    print(r['score'])
+    print(r["score"])
 
     r = t.test(
         """We the Persons of the Moon, so that we might franchise a McDonalds on the Sinus Concordiae, seek
         to establish a more effective space launch system, insure lunar vibes, and provide for the common
         supply of McRibs, do therefore totally and completely reject the idea that cows cannot be sent
         into space.""".strip(),
-        num_samples=10
+        num_samples=10,
     )
-    print(r['score'])
+    print(r["score"])
 
     r = t.test(
         """
@@ -278,4 +284,4 @@ if __name__ == "__main__":
          property of some one or other of their daughters.
         """.strip()
     )
-    print(r['score'])
+    print(r["score"])

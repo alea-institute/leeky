@@ -42,6 +42,7 @@ from leeky.engines.base_engine import BaseEngine
 # set up logging
 logger = logging.getLogger(__name__)
 
+
 def completion_prompt_001(text: str) -> str:
     """Generate a simple prompt to complete the following question WITHOUT context."""
 
@@ -82,6 +83,7 @@ Source:"""
     prompt = prompt.strip()
 
     return prompt
+
 
 def completion_prompt_004(text: str) -> str:
     """Generate a simple prompt to complete the following question WITHOUT context."""
@@ -172,10 +174,10 @@ class SourceRecallTester:
         self.rng = numpy.random.RandomState(seed=seed)
 
     def test(
-            self,
-            text: str,
-            match_list: list[str],
-            num_samples: int = 5,
+        self,
+        text: str,
+        match_list: list[str],
+        num_samples: int = 5,
     ) -> dict:
         """Test where the model thinks the text came from.
 
@@ -213,8 +215,11 @@ class SourceRecallTester:
             initial_position = self.rng.randint(0, num_tokens - num_tokens_sample)
 
             # get the tokens to test
-            sample_text = text[text_token_splits[initial_position]:
-                               text_token_splits[initial_position + num_tokens_sample]]
+            sample_text = text[
+                text_token_splits[initial_position] : text_token_splits[
+                    initial_position + num_tokens_sample
+                ]
+            ]
 
             # send the text to the completion engine
             sample = {
@@ -236,7 +241,10 @@ class SourceRecallTester:
                 # if we have a sample, score it
                 if sample["text_completion"] is not None:
                     for match in match_list:
-                        if match.lower().strip() in sample["text_completion"].lower().strip():
+                        if (
+                            match.lower().strip()
+                            in sample["text_completion"].lower().strip()
+                        ):
                             sample["score"] = 1.0
                             break
             except Exception as e:
@@ -246,7 +254,11 @@ class SourceRecallTester:
                 results["samples"].append(sample)
 
         # aggregate non-None scores and compute the average
-        scores = [sample["score"] for sample in results["samples"] if sample["score"] is not None]
+        scores = [
+            sample["score"]
+            for sample in results["samples"]
+            if sample["score"] is not None
+        ]
         results["score"] = sum(scores) / float(len(scores)) if len(scores) > 0 else None
 
         return results
@@ -264,7 +276,7 @@ if __name__ == "__main__":
         Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of
         America.""".strip(),
         ["Constitution"],
-        num_samples=5
+        num_samples=5,
     )
     print(r["score"])
 
@@ -274,7 +286,7 @@ if __name__ == "__main__":
         Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of
         America.""".strip(),
         ["Declaration of Independence"],
-        num_samples=5
+        num_samples=5,
     )
     print(r["score"])
 
@@ -284,6 +296,6 @@ if __name__ == "__main__":
         supply of McRibs, do therefore totally and completely reject the idea that cows cannot be sent
         into space.""".strip(),
         ["Constitution"],
-        num_samples=5
+        num_samples=5,
     )
     print(r["score"])

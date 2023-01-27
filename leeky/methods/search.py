@@ -36,12 +36,13 @@ class SearchTester:
      * [ ] Archive.org
     """
 
-    def __init__(self,
-                 google_api_key: str | None = None,
-                 google_search_engine_id: str | None = None,
-                 bing_api_key: str | None = None,
-                 archive_api_key: str | None = None
-                 ):
+    def __init__(
+        self,
+        google_api_key: str | None = None,
+        google_search_engine_id: str | None = None,
+        bing_api_key: str | None = None,
+        archive_api_key: str | None = None,
+    ):
         """
         Initialize the tester, which is mostly just setting optional keys
 
@@ -105,6 +106,7 @@ class SearchTester:
 
         # return number of results
         return results["searchInformation"]["totalResults"]
+
 
 if __name__ == "__main__":
     # test the google search

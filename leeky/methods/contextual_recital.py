@@ -38,6 +38,7 @@ from leeky.methods.recital import RecitalTester
 # set up logging
 logger = logging.getLogger(__name__)
 
+
 def completion_prompt_001(question_text: str, source: str) -> str:
     """Generate a simple prompt to complete the following question WITHOUT context."""
 
@@ -155,13 +156,13 @@ class ContextualRecitalTester(RecitalTester):
     """
 
     def __init__(
-            self,
-            completion_engine: BaseEngine,
-            source: str,
-            min_tokens: int = 5,
-            max_tokens: int = 50,
-            completion_prompts: list = RECITAL_COMPLETION_PROMPTS,
-            seed: int | None = None,
+        self,
+        completion_engine: BaseEngine,
+        source: str,
+        min_tokens: int = 5,
+        max_tokens: int = 50,
+        completion_prompts: list = RECITAL_COMPLETION_PROMPTS,
+        seed: int | None = None,
     ) -> None:
         """Initialize the tester."""
 
@@ -222,7 +223,9 @@ class ContextualRecitalTester(RecitalTester):
             )
             initial_text = text[: text_token_splits[num_initial_tokens]]
             terminal_text = text[text_token_splits[num_initial_tokens] :]
-            terminal_text_token_splits = leeky.nlp.get_ws_token_boundaries(terminal_text)
+            terminal_text_token_splits = leeky.nlp.get_ws_token_boundaries(
+                terminal_text
+            )
 
             # send the text to the completion engine
             sample = {
@@ -257,10 +260,15 @@ class ContextualRecitalTester(RecitalTester):
                 results["samples"].append(sample)
 
         # aggregate non-None scores and compute the average
-        scores = [sample["score"] for sample in results["samples"] if sample["score"] is not None]
+        scores = [
+            sample["score"]
+            for sample in results["samples"]
+            if sample["score"] is not None
+        ]
         results["score"] = sum(scores) / float(len(scores)) if len(scores) > 0 else None
 
         return results
+
 
 if __name__ == "__main__":
     from leeky.engines.openai_engine import OpenAIEngine
@@ -274,9 +282,9 @@ if __name__ == "__main__":
         domestic Tranquility, provide for the common defence, promote the general Welfare, and secure the Blessings of
         Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of
         America.""".strip(),
-        num_samples=10
+        num_samples=10,
     )
-    print(r['score'])
+    print(r["score"])
 
     t.set_source("Article III, US Constitution")
     r = t.test(
@@ -284,9 +292,9 @@ if __name__ == "__main__":
         to establish a more effective space launch system, insure lunar vibes, and provide for the common
         supply of McRibs, do therefore totally and completely reject the idea that cows cannot be sent
         into space.""".strip(),
-        num_samples=10
+        num_samples=10,
     )
-    print(r['score'])
+    print(r["score"])
 
     t.set_source("a transcript of Transformers the Movie")
     r = t.test(
@@ -297,4 +305,4 @@ if __name__ == "__main__":
          property of some one or other of their daughters.
         """.strip()
     )
-    print(r['score'])
+    print(r["score"])
