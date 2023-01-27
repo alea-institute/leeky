@@ -26,6 +26,8 @@ Source:
 
 This is a valid description of the source of the text, which can be checked via substring
 or fuzzy string matching.
+
+TODO: Decide where the "Is the following text from XYZ?" prompt should go.
 """
 
 
