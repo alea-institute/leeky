@@ -69,7 +69,7 @@ for extended robot video games as part of cool employer benefit programs."""
 
     source_veracity_tester = SourceVeracityTester(completion_engine=engine)
     source_recall_tester = SourceRecallTester(completion_engine=engine)
-    search_tester = SearchTester(google_search_engine_id=GOOGLE_SEARCH_ENGINE_ID)
+    search_tester = SearchTester()
 
     # that's it - the rest of this is just formatting for pretty output.
 
@@ -89,7 +89,7 @@ for extended robot video games as part of cool employer benefit programs."""
             "source_recall": source_recall_tester.test(
                 text_1, match_list=["Constitution", "Preamble"], num_samples=num_samples
             ),
-            "search": search_tester.test(text_1),
+            "search": search_tester.test(text_1, num_samples=1),
         },
         "text_2": {
             "recital": recital_tester.test(text_2, num_samples=num_samples),
@@ -105,7 +105,7 @@ for extended robot video games as part of cool employer benefit programs."""
             "source_recall": source_recall_tester.test(
                 text_2, match_list=["Constitution", "Preamble"], num_samples=num_samples
             ),
-            "search": search_tester.test(text_2),
+            "search": search_tester.test(text_2, num_samples=1),
         },
     }
 
@@ -129,7 +129,7 @@ for extended robot video games as part of cool employer benefit programs."""
                 "source_recall": source_recall_tester.test(
                     text_3, match_list=["Wikipedia", "RICO"], num_samples=num_samples
                 ),
-                "search": search_tester.test(text_3),
+                "search": search_tester.test(text_3, num_samples=1),
             },
             "text_4": {
                 "recital": recital_tester.test(text_4, num_samples=num_samples),
@@ -145,7 +145,7 @@ for extended robot video games as part of cool employer benefit programs."""
                 "source_recall": source_recall_tester.test(
                     text_4, match_list=["Wikipedia", "RICO"], num_samples=num_samples
                 ),
-                "search": search_tester.test(text_4),
+                "search": search_tester.test(text_4, num_samples=1),
             },
         }
     )

@@ -123,39 +123,44 @@ class SearchTester:
         return response.json()
 
     @staticmethod
-    def search_google_playwright(text: str, headless: bool = True) -> dict:
+    def search_google_playwright(text: str, headless: bool = False) -> dict:
         """Use playwright instead of API if you can't get your
         quota increased."""
 
         # create a playwright browser instance and navigate to google.com
-        # don't make ikt headless; we want to watch
+        # setup the device as an iPhone 11 Pro
         with sync_playwright() as p:
+            # setup browser and context
             browser = p.chromium.launch(headless=headless)
-            page: Page = browser.new_page()
+            context = browser.new_context()
+
+            # setup page
+            page: Page = context.new_page()
             page.goto("https://google.com")
 
-            # search for the text
+            # select the q input box and type the text
+            page.click("input[name=q]")
             page.fill("input[name='q']", f'"{text}"')
 
             # hit enter from inside the `q` input
             page.keyboard.press("Enter")
 
-            # wait for the results to load
-            page.wait_for_selector("div.g")
-
-            # check the total number of results
-            num_results_text = page.query_selector("div#result-stats").inner_text()
+            # wait for the results to load #main
+            page.wait_for_selector("#main")
+            time.sleep(1)
 
             # get the number out and convert to int
+            num_results = 0
             try:
-                # check if the page contains `No results found for` inside #topstuff text
-                if (
-                    "No results found for"
-                    in page.query_selector("#topstuff").inner_text()
-                ):
+                # get the whole body text
+                body_element = page.query_selector("body")
+                if "No results found for " in body_element.text_content():
                     num_results = 0
                 else:
-                    num_results = int(num_results_text.split(" ")[1].replace(",", ""))
+                    result_stat_element = page.query_selector("div#result-stats")
+                    if result_stat_element is not None:
+                        result_stat_text = result_stat_element.text_content()
+                        num_results = int(result_stat_text.split(" ")[1].replace(",", ""))
             except Exception as e:
                 logger.error(f"Failed to parse total results: {e}")
                 total_results = 0

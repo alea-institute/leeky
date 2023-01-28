@@ -6,6 +6,14 @@ black box text completion models, including OpenAI's models or HuggingFace model
 
 
 ## Example Results
+The following table is generated from the `examples/example.py` script.
+
+It shows that the methods in this repository can effectively discriminate between
+information that is in the training data and information that is not in the training
+data. 
+
+Further research on behavior in common models and for k-eidetic samples is ongoing.
+
 | Text                                            | Recital               | Contextual Recital | Semantic Recital       | Source Veracity | Source Recall | Search   |
 |--------------------------------------------------|------------------------|--------------------|------------------------|------------------|----------------|----------|
 | Preamble, US Constitution                       | 0.91                   | 1.00                | 0.53                    | 1.00              | 1.00           | 87100.00 |
@@ -29,6 +37,18 @@ completion of the original tokens beginning at position N+1.
 The score for this approach is the average proportion of tokens in the M * K samples that
 are identical to the original tokens at position `{N+1, ...}`.
 
+**Code**:
+```python
+from leeky.engines.openai_engine import OpenAIEngine
+from leeky.methods.recital import RecitalTester
+
+engine = OpenAIEngine(api_key=OPENAI_API_KEY, model="text-davinci-003")
+
+recital_tester = RecitalTester(completion_engine=engine)
+result = recital_tester.test(text_1, num_samples=5)
+```
+
+
 **Example:** Article III of the US Constitution is recited by `text-davinci-003`.
 ```
 <PROMPT>Please complete the following text:
@@ -48,6 +68,18 @@ complete text *from a specific source*.
 
 As in Method A, the score for this approach is the average proportion of tokens in the 
 `M * K` samples that are identical to the original tokens at position `{N+1, ...}`.
+
+
+**Code**:
+```python
+from leeky.engines.openai_engine import OpenAIEngine
+from leeky.methods.contextual_recital import ContextualRecitalTester
+
+engine = OpenAIEngine(api_key=OPENAI_API_KEY, model="text-davinci-003")
+
+contextual_recital_tester = ContextualRecitalTester(completion_engine=engine, source="Wikipedia")
+result = contextual_recital_tester.test(text_1, num_samples=5)
+```
 
 **Example:** Article III of the US Constitution is recited by `text-davinci-003`.
 
@@ -75,6 +107,20 @@ a non-LLM technique, such as:
   * word2vec, doc2vec, or BERT similarity of the original and generated text
   * number of tokens within \eps threshold in word embedding space
 
+**Code**:
+```python
+from leeky.engines.openai_engine import OpenAIEngine
+from leeky.methods.semantic_recital import SemanticRecitalTester, SimilarityType
+
+engine = OpenAIEngine(api_key=OPENAI_API_KEY, model="text-davinci-003")
+
+semantic_recital_tester = SemanticRecitalTester(
+    completion_engine=engine,
+    similarity_method=SimilarityType.SPACY_SIMILARITY_POINTS
+)
+result = semantic_recital_tester.test(text_1, num_samples=5)
+```
+
 ### D. Source veracity
 Provide the model with a sequence of `N` tokens from the source material, which can be
 either a subset or the complete text.  
@@ -97,6 +143,17 @@ Is this text from a real document?  Answer yes or no.
 Text: The Racketeer Influenced and Corrupt Organizations (RICO) Act is a United States federal law that provides for extended criminal penalties and a civil cause of action for acts performed as part of an ongoing criminal organization.
 ----
 Answer: Yes
+```
+
+**Code**:
+```python
+from leeky.engines.openai_engine import OpenAIEngine
+from leeky.methods.source_veracity import SourceVeracityTester
+
+engine = OpenAIEngine(api_key=OPENAI_API_KEY, model="text-davinci-003")
+
+source_veracity_tester = SourceVeracityTester(completion_engine=engine)
+result = source_veracity_tester.test(text_1, num_samples=5)
 ```
 
 ### E. Source recall
@@ -126,6 +183,18 @@ This is a valid description of the source of the text, which can be checked via 
 or fuzzy string matching.
 
 
+**Code**:
+```python
+from leeky.engines.openai_engine import OpenAIEngine
+from leeky.methods.source_recall import SourceRecallTester
+
+engine = OpenAIEngine(api_key=OPENAI_API_KEY, model="text-davinci-003")
+
+source_recall_tester = SourceRecallTester(completion_engine=engine)
+result = source_recall_tester.test(text_1, match_list=["Constitution", "Preamble"], num_samples=5)
+```
+
+
 ### F. Search Engines
 Provide a random substring of the source material to a search engine like Google Search, Bing,
 or Archive.org.  Generate `M` samples like this.
@@ -134,4 +203,10 @@ Unlike the other methods, this method does not return a score in [0.0, 1.0].  In
 this method returns the average number of results from the search engine across the
 `M` samples.
 
+```python
 
+from leeky.methods.search import SearchTester
+
+search_tester = SearchTester()
+result = search_tester.test(text_1, num_samples=5)
+```
