@@ -58,6 +58,7 @@ class SearchTester:
         max_token_proportion: float = 1.0,
         google_api_key: str | None = None,
         google_search_engine_id: str | None = None,
+        google_search_method: str = "playwright",
         bing_api_key: str | None = None,
         archive_api_key: str | None = None,
         seed: int | None = None,
@@ -70,6 +71,7 @@ class SearchTester:
             max_token_proportion: The maximum proportion of tokens to use from the source text.
             google_api_key: Google API key
             google_search_engine_id: Google Search Engine ID
+            google_search_method: Google Search Method
             bing_api_key: Bing API key
             archive_api_key: Archive.org API key
         """
@@ -82,6 +84,7 @@ class SearchTester:
             google_api_key = GOOGLE_API_KEY
         self.google_api_key = google_api_key
         self.google_search_engine_id = google_search_engine_id
+        self.google_search_method = google_search_method
 
         # bing setup
         self.bing_api_key = bing_api_key
@@ -119,8 +122,20 @@ class SearchTester:
             params=request_params,
         )
 
+        # get the number of total results
+        response_data = response.json()
+        try:
+            total_results = int(response_data["searchInformation"]["totalResults"])
+        except KeyError as e:
+            logger.error(f"Error parsing response: {response_data} ({e})")
+            total_results = 0
+
         # return results
-        return response.json()
+        return {
+            "text": text,
+            "score": total_results,
+            "samples": [],
+        }
 
     @staticmethod
     def search_google_playwright(text: str, headless: bool = False) -> dict:
@@ -229,7 +244,14 @@ class SearchTester:
 
             try:
                 # search google
-                api_results = self.search_google_playwright(sample_text)
+                if self.google_search_method == "api":
+                    api_results = self.search_google_api(sample_text)
+                elif self.google_search_method == "playwright":
+                    api_results = self.search_google_playwright(sample_text)
+                else:
+                    raise ValueError(
+                        f"Invalid search method: {self.google_search_method}"
+                    )
                 time.sleep(DEFAULT_SEARCH_SLEEP)
 
                 # get the number of results
