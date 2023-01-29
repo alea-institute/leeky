@@ -165,7 +165,7 @@ for extended robot video games as part of cool employer benefit programs."""
             "contextual_recital": results["text_2"]["contextual_recital"]["score"],
             "semantic_recital": results["text_2"]["semantic_recital"]["score"],
             "source_veracity": results["text_2"]["source_veracity"]["score"],
-            "source_recall": None,
+            "source_recall": results["text_2"]["source_recall"]["score"],
             "search": results["text_2"]["search"]["score"],
         },
         "text_3": {
@@ -181,7 +181,7 @@ for extended robot video games as part of cool employer benefit programs."""
             "contextual_recital": results["text_4"]["contextual_recital"]["score"],
             "semantic_recital": results["text_4"]["semantic_recital"]["score"],
             "source_veracity": results["text_4"]["source_veracity"]["score"],
-            "source_recall": None,
+            "source_recall": results["text_4"]["source_recall"]["score"],
             "search": results["text_4"]["search"]["score"],
         },
     }
