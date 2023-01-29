@@ -15,6 +15,9 @@ rapidfuzz = "^2.13.7"
 httpx = {extras = ["h2"], version = "^0.23.3"}
 rich = "^13.2.0"
 playwright = "^1.30.0"
+transformers = "^4.26.0"
+accelerate = "^0.15.0"
+sentencepiece = "^0.1.97"
 
 
 [tool.poetry.group.dev.dependencies]
