@@ -249,6 +249,10 @@ class SourceRecallTester:
                         ):
                             sample["score"] = 1.0
                             break
+
+                # if we don't have a score, set it to 0
+                if sample["score"] is None:
+                    sample["score"] = 0.0
             except Exception as e:
                 logger.error(f"Error getting completions: {e}")
                 continue
