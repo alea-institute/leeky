@@ -265,6 +265,6 @@ class SourceRecallTester:
             for sample in results["samples"]
             if sample["score"] is not None
         ]
-        results["score"] = sum(scores) / float(len(scores)) if len(scores) > 0 else None
+        results["score"] = sum(scores) / float(len(scores)) if len(scores) > 0 else 0.0
 
         return results
