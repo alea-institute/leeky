@@ -11,8 +11,14 @@ from pathlib import Path
 from rich.console import Console
 from rich.table import Table
 
-# leeky imports
+# leeky engine imports
+from leeky.engines.bloom_engine import BloomEngine
 from leeky.engines.openai_engine import OpenAIEngine
+from leeky.engines.gptj_engine import GTPJEngine
+from leeky.engines.gptneo_engine import GTPNeoEngine
+from leeky.engines.t5_engine import T5Engine
+
+# leeky tester imports
 from leeky.methods.recital import RecitalTester
 from leeky.methods.contextual_recital import ContextualRecitalTester
 from leeky.methods.semantic_recital import SemanticRecitalTester, SimilarityType
@@ -34,10 +40,14 @@ if __name__ == "__main__":
     console = Console(width=200)
 
     # initialize default engine, which we'll assume is OpenAI text-davinci-001 for this testing
-    engine = OpenAIEngine(api_key=OPENAI_API_KEY, model="text-davinci-003")
+    #engine = OpenAIEngine(api_key=OPENAI_API_KEY, model="text-davinci-003")
+    #engine = GTPNeoEngine(parameters={"temperature": 0.5, "max_length": 512})
+    #engine = GTPJEngine(parameters={"temperature": 0.5, "max_length": 512})
+    #engine = T5Engine(parameters={"temperature": 0.5, "max_length": 512})
+    engine = BloomEngine(parameters={"temperature": 0.5, "max_length": 512})
 
     # set number of samples to generate
-    num_samples = 5
+    num_samples = 3
 
     # setup text examples
     text_1 = """"We the People of the United States, in Order to form a more perfect Union, establish Justice, insure 
@@ -69,7 +79,7 @@ for extended robot video games as part of cool employer benefit programs."""
 
     source_veracity_tester = SourceVeracityTester(completion_engine=engine)
     source_recall_tester = SourceRecallTester(completion_engine=engine)
-    search_tester = SearchTester()
+    search_tester = SearchTester(google_search_method="api")
 
     # that's it - the rest of this is just formatting for pretty output.
 
