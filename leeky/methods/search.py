@@ -252,19 +252,3 @@ class SearchTester:
             results["score"] = sum(scores) / float(len(scores))
 
         return results
-
-
-if __name__ == "__main__":
-    # test the google search
-    # this search engine ID is public and can be shared between people with API keys.
-    # to setup your own, see https://developers.google.com/custom-search/v1/overview
-    st = SearchTester()
-
-    text = """It is a truth universally acknowledged, that a single man in possession 
-            of a good fortune must be in want of a wife."""
-    r = st.test(text, num_samples=1)
-    print(r["score"])
-
-    text = "It is a truth universally acknowledged, that a tomato unattended must be in want of a hornworm."
-    r = st.test(text, num_samples=1)
-    print(r["score"])

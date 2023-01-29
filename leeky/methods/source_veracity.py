@@ -237,28 +237,3 @@ class SourceVeracityTester:
         results["score"] = sum(scores) / float(len(scores)) if len(scores) > 0 else None
 
         return results
-
-
-if __name__ == "__main__":
-    from leeky.engines.openai_engine import OpenAIEngine
-
-    oai = OpenAIEngine(model="text-davinci-003", parameters={"temperature": 0.5})
-    t = SourceVeracityTester(oai)
-
-    r = t.test(
-        """We the People of the United States, in Order to form a more perfect Union, establish Justice, insure 
-        domestic Tranquility, provide for the common defence, promote the general Welfare, and secure the Blessings of
-        Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of
-        America.""".strip(),
-        num_samples=25,
-    )
-    print(r["score"])
-
-    r = t.test(
-        """We the Persons of the Moon, so that we might franchise a McDonalds on the Sinus Concordiae, seek
-        to establish a more effective space launch system, insure lunar vibes, and provide for the common
-        supply of McRibs, do therefore totally and completely reject the idea that cows cannot be sent
-        into space.""".strip(),
-        num_samples=25,
-    )
-    print(r["score"])
