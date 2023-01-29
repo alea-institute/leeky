@@ -111,7 +111,7 @@ class OpenAIEngine(BaseEngine):
 
         # setup rng
         if seed is None:
-            seed = numpy.random.randint(0, 2**32 - 1)
+            seed = numpy.random.randint(0, 2**32 - 1, dtype=numpy.int64)
         self.rng = numpy.random.RandomState(seed)
 
     def get_name(self) -> str:
@@ -229,17 +229,3 @@ class OpenAIEngine(BaseEngine):
 
         # return the completions
         return response_list
-
-
-if __name__ == "__main__":
-    oai = OpenAIEngine()
-    oai.set_parameters(
-        {
-            "temperature": 1.0,
-            "max_tokens": 32,
-        }
-    )
-    prompt = "Joke: Why did the"
-
-    for c in oai.get_completions(prompt, n=5):
-        print(prompt + c["choices"][0]["text"])

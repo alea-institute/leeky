@@ -147,7 +147,7 @@ class SourceVeracityTester:
 
         # initialize the seed if required and RNG
         if seed is None:
-            seed = numpy.random.randint(0, 2**32 - 1)
+            seed = numpy.random.randint(0, 2**32 - 1, dtype=numpy.int64)
         self.seed = seed
         self.rng = numpy.random.RandomState(seed=seed)
 

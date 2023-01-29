@@ -91,7 +91,7 @@ class SearchTester:
 
         # initialize the seed if required and RNG
         if seed is None:
-            seed = numpy.random.randint(0, 2**32 - 1)
+            seed = numpy.random.randint(0, 2**32 - 1, dtype=numpy.int64)
         self.seed = seed
         self.rng = numpy.random.RandomState(seed=seed)
 
@@ -160,7 +160,9 @@ class SearchTester:
                     result_stat_element = page.query_selector("div#result-stats")
                     if result_stat_element is not None:
                         result_stat_text = result_stat_element.text_content()
-                        num_results = int(result_stat_text.split(" ")[1].replace(",", ""))
+                        num_results = int(
+                            result_stat_text.split(" ")[1].replace(",", "")
+                        )
             except Exception as e:
                 logger.error(f"Failed to parse total results: {e}")
                 total_results = 0
